@@ -1,0 +1,13 @@
+{
+  "name": "xkeys-atem-remote",
+  "version": "1.0.0",
+  "description": "Configurable remote control for Blackmagic Design ATEM switchers using XKeys",
+  "main": "index.js",
+  "author": "Andreas Reich <andreas@reich.name>",
+  "license": "MIT",
+  "dependencies": {
+    "atem": "^0.1.8",
+    "json5": "^2.1.3",
+    "xkeys": "^0.1.2"
+  }
+}

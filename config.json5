@@ -1,0 +1,121 @@
+/* This is a JSON5 file. It's similar to JSON but allows comments and more. See json5.org! */
+{
+    // Set this to true to show each pressed key on console (useful for figuring out key IDs)
+    showKeyPresses: false,
+
+    switcherIP: "10.0.14.69",
+
+    // If set to false, only the backlight of the keys defined below is ever changed and all others
+    // will be left untouched
+    clearBacklightOnStartup: true,
+
+    initialBrightness: 255,
+
+    keys: [
+        {
+            key: 72,
+            function: 'backlight_up' // Increases XKeys backlight by about 5%
+        },
+        {
+            key: 73,
+            function: 'backlight_down' // Decreases XKeys backlight by about 5%
+        },
+        {
+            key: 75,
+            additionalLEDs: [67], // This is a double wide key so it needs to control two LEDs
+            function: 'ftb'
+        },
+        {
+            key: 71,
+            additionalLEDs: [70],
+            function: 'cut' // Performs a cut transition
+        },
+        {
+            key: 79,
+            additionalLEDs: [78],
+            function: 'auto' // Triggers an auto transition
+        },
+        {
+            key: 69,
+            function: 'transition', // Sets the transition type
+            transition: 0 // Mix
+        },
+        {
+            key: 77,
+            function: 'transition', // Sets the transition type
+            transition: 2 // Wipe
+        },
+        {
+            key: 68,
+            function: 'wipe_prev' // Selects the previous wipe pattern on the list
+        },
+        {
+            key: 76,
+            function: 'wipe_next' // Selects the next wipe pattern on the list
+        },
+        {
+            key: 27,
+            function: 'program_mode' // Toggles program mode in which pressing source buttons directly affects the program bus
+        },
+        {
+            key: 31,
+            function: 'source',
+            source: 1
+        },
+        {
+            key: 39,
+            function: 'source',
+            source: 2
+        },
+        {
+            key: 47,
+            function: 'source',
+            source: 3
+        },
+        {
+            key: 55,
+            function: 'source',
+            source: 4
+        },
+        {
+            key: 30,
+            function: 'source',
+            source: 5
+        },
+        {
+            key: 38,
+            function: 'source',
+            source: 6
+        },
+        {
+            key: 46,
+            function: 'source',
+            source: 7
+        },
+        {
+            key: 54,
+            function: 'source',
+            source: 8
+        },
+        {
+            key: 29,
+            function: 'source',
+            source: 3010 // Media Player 1
+        },
+        {
+            key: 37,
+            function: 'source',
+            source: 3020 // Media Player 2
+        },
+        {
+            key: 45,
+            function: 'source',
+            source: 1000 // Color Bars
+        },
+        {
+            key: 53,
+            function: 'source',
+            source: 0 // Black
+        },
+    ]
+}
