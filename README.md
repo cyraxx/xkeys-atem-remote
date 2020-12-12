@@ -33,6 +33,7 @@ When the connection to the ATEM is lost, all source keys will start flashing. Th
 # Usage
 
 * Install [node.js](https://nodejs.org/) and [yarn](https://classic.yarnpkg.com/en/docs/install/)
+* Run `yarn install`
 * Edit `config.json5` to your liking
 * Run `node index.js`
 
