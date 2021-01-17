@@ -109,6 +109,7 @@ switcher.on('rawCommand', cmd => {
 /* Panel button handlers */
 
 let programMode = false;
+let shiftMode = false;
 
 panel.on('down', keyIndex => {
     if (config.showKeyPresses) console.log(`Key ${keyIndex} pressed`);
@@ -152,6 +153,27 @@ panel.on('down', keyIndex => {
         case 'backlight_down':
             currentBrightness = Math.max(currentBrightness - 10, 0);
             panel.setBacklightIntensity(currentBrightness);
+            break;
+        case 'shift':
+            shiftMode = true;
+            setLEDForKeyMapping(mapping, null, null, shiftMode, false);
+            break;
+        case 'shift_toggle':
+            shiftMode = !shiftMode;
+            setLEDForKeyMapping(mapping, null, null, shiftMode, false);
+            break;
+    }
+});
+
+
+panel.on('up', keyIndex => {
+    
+    const mapping = keyMappings[keyIndex];
+    if (!mapping) return;
+
+    switch (mapping.function) {
+        case 'shift':
+            shiftMode = false;
             break;
     }
 });
