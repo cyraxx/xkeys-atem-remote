@@ -55,6 +55,9 @@ switcher.ip = config.switcherIP;
 switcher.connect();
 flashAllSources();
 
+let flashShiftedSources = config.flashShiftedSources;
+
+
 /* Switcher state change handlers */
 
 switcher.on('connectionStateChange', state => {
@@ -63,11 +66,21 @@ switcher.on('connectionStateChange', state => {
 });
 
 switcher.on('previewBus', source => {
-    forEachMappingOfType('source', mapping => setLEDForKeyMapping(mapping, mapping.source == source, false, null, null));
+    forEachMappingOfType('source', mapping => 
+        {
+            var sourceMatches = (mapping.source == source) && !(mapping.alwaysProgram);
+            var shiftSourceMatches = (flashShiftedSources && mapping.shiftSource == source);
+            setLEDForKeyMapping(mapping, (sourceMatches || shiftSourceMatches), shiftSourceMatches), null, null;  
+        });
 });
 
 switcher.on('programBus', source => {
-    forEachMappingOfType('source', mapping => setLEDForKeyMapping(mapping, null, null, mapping.source == source, false));
+    forEachMappingOfType('source', mapping => 
+        {
+            var sourceMatches = (mapping.source == source) && !(mapping.alwaysPreview);
+            var shiftSourceMatches = (flashShiftedSources && mapping.shiftSource == source) && !(mapping.alwaysPreview);
+            setLEDForKeyMapping(mapping, null, null, (sourceMatches || shiftSourceMatches), shiftSourceMatches);  
+        });
 });
 
 let currentlyTransitioning = false;
@@ -143,8 +156,10 @@ panel.on('down', keyIndex => {
             setLEDForKeyMapping(mapping, null, null, programMode, false);
             break;
         case 'source':
-            if (programMode) switcher.setProgram(mapping.source);
-            else switcher.setPreview(mapping.source);
+            let source = mapping.source;
+            if (shiftMode && ('shiftSource' in mapping)) source = mapping.shiftSource;
+            if ((programMode || mapping.alwaysProgram) && !mapping.alwaysPreview) switcher.setProgram(source);
+            else switcher.setPreview(source);
             break;
         case 'backlight_up':
             currentBrightness = Math.min(currentBrightness + 10, 255);
@@ -174,6 +189,7 @@ panel.on('up', keyIndex => {
     switch (mapping.function) {
         case 'shift':
             shiftMode = false;
+            setLEDForKeyMapping(mapping, null, null, shiftMode, false);
             break;
     }
 });
