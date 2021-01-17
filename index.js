@@ -12,13 +12,21 @@ const switcher = new ATEM();
 
 /* Helper functions */
 
+const backlightCache = new Map();
 const setLEDForKeyMapping = (keyMapping, blueOn, blueFlash, redOn, redFlash) => {
+    const params = [blueOn, blueFlash, redOn, redFlash];
+
     let keys = [keyMapping.key];
     if (keyMapping.additionalLEDs) keys = keys.concat(keyMapping.additionalLEDs);
 
     keys.forEach(keyIndex => {
+        const cachedParams = backlightCache.get(keyIndex);
+        if (cachedParams && cachedParams.every((p, i) => p === params[i])) return;
+
         if (typeof blueOn == 'boolean') panel.setBacklight(keyIndex, blueOn, false, blueFlash);
         if (typeof redOn == 'boolean') panel.setBacklight(keyIndex, redOn, true, redFlash);
+
+        backlightCache.set(keyIndex, params);
     });
 };
 
