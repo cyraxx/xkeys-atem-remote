@@ -1,7 +1,7 @@
 const ATEM = require('atem');
 const fs = require('fs');
 const JSON5 = require('json5');
-const XKeys = require('xkeys');
+const { XKeys } = require('xkeys');
 
 const config = JSON5.parse(fs.readFileSync('config.json5'));
 const keyMappings = {};

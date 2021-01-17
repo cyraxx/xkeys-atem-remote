@@ -8,6 +8,6 @@
   "dependencies": {
     "atem": "^0.1.8",
     "json5": "^2.1.3",
-    "xkeys": "^0.1.2"
+    "xkeys": "^1.1.0"
   }
 }
