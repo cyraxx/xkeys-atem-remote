@@ -155,3 +155,25 @@ panel.on('down', keyIndex => {
             break;
     }
 });
+
+/* T-bar handler */
+
+if (!config.disableTbar) {
+    let lastTbarPosition = -1;
+    let tbarReverse = false;
+
+    panel.on('tbar', position => {
+        if (lastTbarPosition === -1) {
+            lastTbarPosition = position;
+            if (position >= 128) tbarReverse = true;
+        }
+
+        if (position === lastTbarPosition) return;
+        lastTbarPosition = position;
+
+        const atemPosition = Math.round((tbarReverse ? 255 - position : position) * 10000 / 255);
+        switcher.sendCommand(new ATEM.Command('CTPs', Buffer.from([0, 0, atemPosition >>> 8, atemPosition & 0xFF])))
+
+        if (atemPosition === 10000) tbarReverse = !tbarReverse;
+    });
+}

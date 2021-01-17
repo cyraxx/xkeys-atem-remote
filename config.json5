@@ -11,6 +11,9 @@
 
     initialBrightness: 255,
 
+    // Set this to true if your panel has a T-bar but you do not want it to control the ATEM
+    disableTbar: false,
+
     keys: [
         {
             key: 72,
