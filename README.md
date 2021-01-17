@@ -15,6 +15,7 @@ Should run on any platform supported by [node-hid](https://github.com/node-hid/n
 Currently supports:
 * Source selection
 * Cut and Auto transitions
+* T-bar transitions (for XKE-124 T-bar)
 * Transition mode selection
 * Wipe pattern selection
 * FTB
@@ -32,9 +33,14 @@ When the connection to the ATEM is lost, all source keys will start flashing. Th
 
 # Usage
 
+## Installation
+
 * Install [node.js](https://nodejs.org/) and [yarn](https://classic.yarnpkg.com/en/docs/install/)
 * Run `yarn install`
 * Edit `config.json5` to your liking
+
+## Running
+
 * Run `node index.js`
 
 # Acknowledgements
