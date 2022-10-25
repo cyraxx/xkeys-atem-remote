@@ -58,7 +58,8 @@
         },
         {
             key: 27,
-            function: 'program_mode' // Toggles program mode in which pressing source buttons directly affects the program bus
+            function: 'program_mode' // Toggles program mode in which pressing source buttons directly affect the program bus
+            // Alternatively, to have separate buttons that put sources into program, use function: 'source_pgm' for those
         },
         {
             key: 31,
