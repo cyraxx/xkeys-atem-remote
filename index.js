@@ -1,13 +1,16 @@
 const ATEM = require('atem');
 const fs = require('fs');
 const JSON5 = require('json5');
-const { XKeys } = require('xkeys');
+const xkeys = require('xkeys');
 
 const config = JSON5.parse(fs.readFileSync('config.json5'));
 const keyMappings = {};
 config.keys.forEach(mapping => keyMappings[mapping.key] = mapping);
 
 let panel, switcher;
+let currentWipe = 0;
+let currentBrightness = config.initialBrightness;
+let currentSourcePreview, currentSourceProgram;
 
 /* Helper functions */
 
@@ -41,10 +44,9 @@ const flashAllSources = function() {
 };
 
 async function main() {
-    const panel = await XKeys.setupXKeysPanel();
-    const switcher = new ATEM();
+    panel = await xkeys.setupXkeysPanel();
+    switcher = new ATEM();
 
-    let currentBrightness = config.initialBrightness;
     panel.setBacklightIntensity(currentBrightness);
     panel.setFrequency(8);
 
@@ -102,7 +104,6 @@ function setupSwitcherHandlers() {
         forEachMappingOfType('transition', mapping => setLEDForKeyMapping(mapping, mapping.transition == packet[1] ? COLOR_BLUE : COLOR_OFF));
     });
 
-    let currentWipe;
     switcher.on('TWpP', packet => {
         currentWipe = packet[2];
     });
@@ -168,7 +169,7 @@ function setupPanelHandlers() {
         let lastTbarPosition = -1;
         let tbarReverse = false;
 
-        panel.on('tbar', position => {
+        panel.on('tbar', (index, position) => {
             if (lastTbarPosition === -1) {
                 lastTbarPosition = position;
                 if (position >= 128) tbarReverse = true;
@@ -184,3 +185,6 @@ function setupPanelHandlers() {
         });
     }
 }
+
+main();
+
