@@ -17,6 +17,7 @@ let currentSourcePreview, currentSourceProgram;
 const COLOR_OFF = false;
 const COLOR_RED = 'red';
 const COLOR_BLUE = 'blue';
+const COLOR_RED_BLUE = 'redblue';
 
 const backlightCache = new Map();
 const setLEDForKeyMapping = (keyMapping, color, flash) => {
@@ -64,20 +65,35 @@ async function main() {
     setupPanelHandlers();
 }
 
+function updateSourceLights() {
+    forEachMappingOfType('source', mapping => {
+        let color = COLOR_OFF;
+        if (mapping.source == currentSourceProgram) {
+            color = COLOR_RED;
+            if (mapping.source == currentSourcePreview) color = COLOR_RED_BLUE;
+        } else if (mapping.source == currentSourcePreview) {
+            color = COLOR_BLUE;
+        }
+        setLEDForKeyMapping(mapping, color)
+    });
+
+    forEachMappingOfType('source_pgm', mapping => setLEDForKeyMapping(mapping, mapping.source == currentSourceProgram ? COLOR_RED : COLOR_OFF));
+}
+
 function setupSwitcherHandlers() {
     switcher.on('connectionStateChange', state => {
         console.log(`ATEM connection state: ${state.description}`);
         if (state !== ATEM.ConnectionState.open) flashAllSources();
     });
 
-    // TODO: Fix this for same source on both preview and program
-
     switcher.on('previewBus', source => {
-        forEachMappingOfType('source', mapping => setLEDForKeyMapping(mapping, mapping.source == source ? COLOR_BLUE : COLOR_OFF));
+        currentSourcePreview = source;
+        updateSourceLights();
     });
 
     switcher.on('programBus', source => {
-        forEachMappingOfType('source', mapping => setLEDForKeyMapping(mapping, mapping.source == source ? COLOR_RED : COLOR_OFF));
+        currentSourceProgram = source;
+        updateSourceLights();
     });
 
     let currentlyTransitioning = false;
@@ -153,6 +169,9 @@ function setupPanelHandlers() {
             case 'source':
                 if (programMode) switcher.setProgram(mapping.source);
                 else switcher.setPreview(mapping.source);
+                break;
+            case 'source_pgm':
+                switcher.setProgram(mapping.source);
                 break;
             case 'backlight_up':
                 currentBrightness = Math.min(currentBrightness + 10, 255);
