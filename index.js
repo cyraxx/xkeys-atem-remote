@@ -11,8 +11,7 @@ let panel, switcher;
 let currentWipe = 0;
 let currentBrightness = config.initialBrightness;
 let currentSourcePreview, currentSourceProgram;
-
-/* Helper functions */
+let isShifted = false;
 
 const COLOR_OFF = false;
 const COLOR_RED = 'red';
@@ -44,6 +43,27 @@ const flashAllSources = function() {
     forEachMappingOfType('source', mapping => setLEDForKeyMapping(mapping, COLOR_RED, true));
 };
 
+function updateSourceLights() {
+    forEachMappingOfType('source', mapping => {
+        let source = isShifted ? mapping.shiftSource : mapping.source;
+        let color = COLOR_OFF;
+        if (source !== undefined) {
+            if (source == currentSourceProgram) {
+                color = COLOR_RED;
+                if (source == currentSourcePreview) color = COLOR_RED_BLUE;
+            } else if (source == currentSourcePreview) {
+                color = COLOR_BLUE;
+            }
+        }
+        setLEDForKeyMapping(mapping, color)
+    });
+
+    forEachMappingOfType('source_pgm', mapping => {
+        let source = isShifted ? mapping.shiftSource : mapping.source;
+        setLEDForKeyMapping(mapping, source !== undefined && source == currentSourceProgram ? COLOR_RED : COLOR_OFF);
+    });
+}
+
 async function main() {
     panel = await xkeys.setupXkeysPanel();
     switcher = new ATEM();
@@ -63,21 +83,6 @@ async function main() {
 
     setupSwitcherHandlers();
     setupPanelHandlers();
-}
-
-function updateSourceLights() {
-    forEachMappingOfType('source', mapping => {
-        let color = COLOR_OFF;
-        if (mapping.source == currentSourceProgram) {
-            color = COLOR_RED;
-            if (mapping.source == currentSourcePreview) color = COLOR_RED_BLUE;
-        } else if (mapping.source == currentSourcePreview) {
-            color = COLOR_BLUE;
-        }
-        setLEDForKeyMapping(mapping, color)
-    });
-
-    forEachMappingOfType('source_pgm', mapping => setLEDForKeyMapping(mapping, mapping.source == currentSourceProgram ? COLOR_RED : COLOR_OFF));
 }
 
 function setupSwitcherHandlers() {
@@ -166,12 +171,20 @@ function setupPanelHandlers() {
                 programMode = !programMode;
                 setLEDForKeyMapping(mapping, programMode ? COLOR_RED : COLOR_OFF);
                 break;
-            case 'source':
-                if (programMode) switcher.setProgram(mapping.source);
-                else switcher.setPreview(mapping.source);
+            case 'shift':
+                isShifted = true;
+                updateSourceLights();
                 break;
+            case 'shift_toggle':
+                isShifted = !isShifted;
+                updateSourceLights();
+                break;
+            case 'source':
             case 'source_pgm':
-                switcher.setProgram(mapping.source);
+                let source = isShifted ? mapping.shiftSource : mapping.source;
+                if (source === undefined) break;
+                if (programMode || mapping.function == 'source_pgm') switcher.setProgram(source);
+                else switcher.setPreview(source);
                 break;
             case 'backlight_up':
                 currentBrightness = Math.min(currentBrightness + 10, 255);
@@ -180,6 +193,18 @@ function setupPanelHandlers() {
             case 'backlight_down':
                 currentBrightness = Math.max(currentBrightness - 10, 0);
                 panel.setBacklightIntensity(currentBrightness);
+                break;
+        }
+    });
+
+    panel.on('up', keyIndex => {
+        const mapping = keyMappings[keyIndex];
+        if (!mapping) return;
+
+        switch (mapping.function) {
+            case 'shift':
+                isShifted = false;
+                updateSourceLights();
                 break;
         }
     });

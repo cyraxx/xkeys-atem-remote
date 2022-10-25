@@ -3,7 +3,7 @@
     // Set this to true to show each pressed key on console (useful for figuring out key IDs)
     showKeyPresses: false,
 
-    switcherIP: "10.0.14.69",
+    switcherIP: "10.0.14.14",
 
     // If set to false, only the backlight of the keys defined below is ever changed and all others
     // will be left untouched
@@ -15,110 +15,189 @@
     disableTbar: false,
 
     keys: [
+        /* Internals */
         {
-            key: 72,
+            key: 1,
             function: 'backlight_up' // Increases XKeys backlight by about 5%
         },
         {
-            key: 73,
+            key: 2,
             function: 'backlight_down' // Decreases XKeys backlight by about 5%
         },
+
+        /* Transitions */
         {
-            key: 75,
-            additionalLEDs: [67], // This is a double wide key so it needs to control two LEDs
+            key: 124,
+            additionalLEDs: [116], // This is a double wide key so it needs to control two LEDs
             function: 'ftb'
         },
         {
-            key: 71,
-            additionalLEDs: [70],
+            key: 128,
+            additionalLEDs: [120],
             function: 'cut' // Performs a cut transition
         },
         {
-            key: 79,
-            additionalLEDs: [78],
+            key: 119,
+            additionalLEDs: [127],
             function: 'auto' // Triggers an auto transition
         },
         {
-            key: 69,
+            key: 94,
             function: 'transition', // Sets the transition type
             transition: 0 // Mix
         },
         {
-            key: 77,
+            key: 102,
             function: 'transition', // Sets the transition type
             transition: 2 // Wipe
         },
         {
-            key: 68,
+            key: 93,
             function: 'wipe_prev' // Selects the previous wipe pattern on the list
         },
         {
-            key: 76,
+            key: 101,
             function: 'wipe_next' // Selects the next wipe pattern on the list
         },
+
+        /* Source modifiers */
         {
-            key: 27,
-            function: 'program_mode' // Toggles program mode in which pressing source buttons directly affect the program bus
-            // Alternatively, to have separate buttons that put sources into program, use function: 'source_pgm' for those
+            key: 22,
+            function: 'program_mode' // Toggles program mode in which pressing source keys directly affect the program bus
+            // This can be used on smaller panels where you don't have enough room for separate 'source_pgm' keys
         },
         {
-            key: 31,
+            key: 6,
+            function: 'shift' // Shifts source keys to an alternative bank of sources while held down
+        },
+        {
+            key: 14,
+            function: 'shift_toggle' // Toggles shifting source keys to alternative bank on and off
+        },
+
+        /* Sources (preview) */
+        {
+            key: 8,
             function: 'source',
-            source: 1
+            source: 1,
+            shiftSource: 3010 // Accessed via shift key (see above)
         },
         {
-            key: 39,
+            key: 16,
             function: 'source',
             source: 2
         },
         {
-            key: 47,
+            key: 24,
             function: 'source',
             source: 3
         },
         {
-            key: 55,
+            key: 32,
             function: 'source',
             source: 4
         },
         {
-            key: 30,
+            key: 40,
             function: 'source',
             source: 5
         },
         {
-            key: 38,
+            key: 48,
             function: 'source',
             source: 6
         },
         {
-            key: 46,
+            key: 56,
             function: 'source',
             source: 7
         },
         {
-            key: 54,
+            key: 64,
             function: 'source',
             source: 8
         },
         {
-            key: 29,
+            key: 72,
             function: 'source',
             source: 3010 // Media Player 1
         },
         {
-            key: 37,
+            key: 80,
             function: 'source',
             source: 3020 // Media Player 2
         },
         {
-            key: 45,
+            key: 88,
             function: 'source',
             source: 1000 // Color Bars
         },
         {
-            key: 53,
+            key: 96,
             function: 'source',
+            source: 0 // Black
+        },
+
+        /* Sources (program) */
+        {
+            key: 7,
+            function: 'source_pgm',
+            source: 1,
+            shiftSource: 3010 // Accessed via shift key (see above)
+        },
+        {
+            key: 15,
+            function: 'source_pgm',
+            source: 2
+        },
+        {
+            key: 23,
+            function: 'source_pgm',
+            source: 3
+        },
+        {
+            key: 31,
+            function: 'source_pgm',
+            source: 4
+        },
+        {
+            key: 39,
+            function: 'source_pgm',
+            source: 5
+        },
+        {
+            key: 47,
+            function: 'source_pgm',
+            source: 6
+        },
+        {
+            key: 55,
+            function: 'source_pgm',
+            source: 7
+        },
+        {
+            key: 63,
+            function: 'source_pgm',
+            source: 8
+        },
+        {
+            key: 71,
+            function: 'source_pgm',
+            source: 3010 // Media Player 1
+        },
+        {
+            key: 79,
+            function: 'source_pgm',
+            source: 3020 // Media Player 2
+        },
+        {
+            key: 87,
+            function: 'source_pgm',
+            source: 1000 // Color Bars
+        },
+        {
+            key: 95,
+            function: 'source_pgm',
             source: 0 // Black
         },
     ]
